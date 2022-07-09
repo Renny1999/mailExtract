@@ -1,9 +1,13 @@
 extern crate mailbox;
 
 use std::fs::File;
-use std::io::{BufReader, Read};
+use std::io::{BufReader, BufRead};
 
-use std::env;
+struct Mail {
+    from: String,
+    to: String,
+    contents: String,
+}
 
 fn main() -> std::io::Result<()>{
     let file_name : &str = "res/test.mbox";
@@ -14,22 +18,23 @@ fn main() -> std::io::Result<()>{
         Err(e) => panic!("Error {}",e),
     };
 
-    let mbox = mailbox::read(file);
+    let reader = BufReader::new(file);
+    let mut mail_unit: Mail = Mail{
+                                from: String::with_capacity(10),
+                                to: String::with_capacity(10),
+                                contents: String::new()
+    };
+    for line in reader.lines() {
+        let l = line.unwrap();
+        if (l.len() >= 4 && &l[0..4] == "From") {
+            mail_unit.from = l;
+        }
+        mail_unit += &l;
+        // mail_unit += "\n";
+    }
 
-    // for mail in mbox {
-    //     println!("{:?}", mail);
-    // }
-
-    //
-    // let mut buf_reader = BufReader::new(file);
-    // let mut contents : String = String::new();
-    //
-    // buf_reader.read_to_string(&mut contents)?;
-
-    // for line in &contents {
-    //     println!(line);
-    // }
-    // println!("{}",contents);
+    // println!("{}", mail_unit);
+    
 
 
     Ok(())
