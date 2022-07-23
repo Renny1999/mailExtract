@@ -247,9 +247,6 @@ fn main() -> std::io::Result<()> {
             date: line_by_line[9].to_string(),
             issue: Vec::<(Option<Usage>, String)>::new(),
         };
-        if let Some(_) = store.name.find("宇都宮インターパークショッピングビレッジ店"){
-            println!("{}",decoded_body);
-        }
 
         let mut starti = 0;
         let mut counter = 0;
