@@ -52,6 +52,7 @@ fn break_string(s: &str) -> Vec<&str> {
     res
 }
 
+#[allow(unused)]
 struct Data <'b>{
     name: &'b str,
     electricity: u32,

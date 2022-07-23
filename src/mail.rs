@@ -14,6 +14,7 @@ impl std::fmt::Display for Mail {
     }
 }
 
+#[allow(unused)]
 impl Mail {
     pub fn get_from(&self) -> &str {
         &(self.from)
@@ -26,6 +27,7 @@ impl Mail {
     }
 }
 
+#[allow(unused)]
 pub fn parse_mbox(path: &str) -> Vec<Mail> {
     let file : File = match File::open(path) {
         Ok(f) => f,
