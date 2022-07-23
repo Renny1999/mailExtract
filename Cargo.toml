@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 eml-parser = "0.1.3"
 base64 = "0.13.0"
+chrono = "0.4.19"

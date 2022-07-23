@@ -1,19 +1,17 @@
 mod mail;
 
-use std::array;
+use std::cmp::Ordering;
 use std::collections::HashMap;
 use std::env;
 use std::fs;
 use std::io::Write;
 use std::path::Path;
 use std::fmt;
-use std::io::LineWriter;
 // use std::error::Error;
 // use eml_parser::errors::EmlError;
 use eml_parser::parser::EmlParser;
 use std::str::from_utf8;
-use std::collections::hash_map;
-
+use chrono::NaiveDateTime;
 use base64;
 
 fn get_files(dir: &str) -> Vec<String> {
@@ -78,7 +76,8 @@ fn make_row(v: &Vec<String>) -> String {
 }
 
 /* take the stores and get the useful info */
-fn summarize(stores: &Vec::<EmailData>) -> Vec<String>{
+fn summarize(stores: &Vec::<EmailData>) 
+    -> (Vec<String>, HashMap<String, Vec::<u32>>){
     let mut db: HashMap<String, Vec::<u32>> = HashMap::<String, Vec<u32>>::new();
     let mut res = Vec::<String>::new();
     let ncols = 7;
@@ -94,7 +93,7 @@ fn summarize(stores: &Vec::<EmailData>) -> Vec<String>{
         let cols: &mut Vec::<u32>; 
         if db.contains_key(&name) {
             cols = db.get_mut(&name).unwrap();
-        } 
+        }
         else {
             let c = vec![0;ncols];
             db.insert(name.to_string(), c);
@@ -127,7 +126,7 @@ fn summarize(stores: &Vec::<EmailData>) -> Vec<String>{
     data.sort_by_key(|pair| pair.0);
 
     let mut num = 1;
-    for (name, usage) in data {
+    for (name, usage) in &data {
         let mut x: Vec<String> = usage.iter().map(|x| format!("{}",x)).collect();
 
         x.insert(0, num.to_string());
@@ -141,7 +140,32 @@ fn summarize(stores: &Vec::<EmailData>) -> Vec<String>{
 
     }
 
-    res
+    let mut sums = vec![0; 7];
+
+    for (_key,vals) in &data {
+        sums[0] += vals[0];
+        sums[1] += vals[1];
+        sums[2] += vals[2];
+        sums[3] += vals[3];
+        sums[4] += vals[4];
+        sums[5] += vals[5];
+        sums[6] += vals[6];
+    }
+
+    let footer = 
+        vec!["".to_string(), "総計".to_string(),
+        sums[0].to_string(),
+        sums[1].to_string(),
+        sums[2].to_string(),
+        sums[3].to_string(),
+        sums[4].to_string(),
+        sums[5].to_string(),
+        sums[6].to_string(),
+        "".to_string()];
+
+    res.push(make_row(&footer));
+
+    (res,db)
 }
 
 #[derive(Debug)]
@@ -154,6 +178,8 @@ enum Usage {
     GasAfter,
 }
 
+
+
 #[derive(Debug)]
 struct EmailData{
     company: String,
@@ -161,14 +187,16 @@ struct EmailData{
     id: String,
     name: String,
     date: String,
-    // issue: Vec<&'b str>,
+    parsed_date: Option<NaiveDateTime>,
+    usage_text: Vec<String>,
     issue: Vec<(Option<Usage>, String)>,
 }
+
 
 impl std::fmt::Display for EmailData {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut issues: String = String::new();
-        for (u,v) in &self.issue{
+        for (u,_v) in &self.issue{
             if let Some(usage) = u {
                 match *usage{
                     Usage::Water => issues += "Water",
@@ -193,12 +221,38 @@ impl std::fmt::Display for EmailData {
     }
 }
 
+fn parse_date(date_string: &str) -> Option<chrono::NaiveDateTime> {
+    let mut cleaned = String::new();
+    let mut pause: bool = false;
+    for c in date_string.chars() {
+        if c == '(' {
+            pause = true;
+            continue;
+        }
+        if c == ')' {
+            pause = false;
+            continue;
+        }
+        if pause == true {
+            continue;
+        }
+        cleaned += &(c.to_string());
+    }
+
+    cleaned = cleaned + "0:0:0";
+
+    match chrono::NaiveDateTime:: parse_from_str(
+            &cleaned.to_string(),
+            "日時：%Y年%m月%d日 %H:%M:%S") {
+        Ok(res) => Some(res),
+        Err(_) => None,
+    }
+}
 
 fn main() -> std::io::Result<()> {
     let args: Vec<String> = env::args().collect();
-    assert!(args.len() == 3);
+    assert!(args.len() == 2);
     let src_dir = &args[1];
-    let dest_dir = &args[2];
 
     let input_files = get_files(src_dir);
 
@@ -216,7 +270,6 @@ fn main() -> std::io::Result<()> {
 
     println!("found {} .eml files", eml_files.len());
 
-    let dest_dir = fs::read_dir(dest_dir).unwrap();
     let mut output = fs::File::create(format!("output.csv"))?;
 
     let mut stores :Vec<EmailData> = Vec::<EmailData>::new();
@@ -240,19 +293,24 @@ fn main() -> std::io::Result<()> {
         let line_by_line = break_string(&decoded_body);
 
         let mut store = EmailData {
-            company: line_by_line[0].to_string(),
-            store: line_by_line[1].to_string(),
-            id: line_by_line[2].to_string(),
-            name: line_by_line[8].to_string(),
-            date: line_by_line[9].to_string(),
+            company: line_by_line[0].to_string().replace("\r", ""),
+            store: line_by_line[1].to_string().replace("\r", ""),
+            id: line_by_line[2].to_string().replace("\r", ""),
+            name: line_by_line[8].to_string().replace("\r", ""),
+            date: line_by_line[9].to_string().replace("\r", ""),
+            parsed_date: parse_date(&line_by_line[9].to_string().replace("\r", "")),
+            usage_text: Vec::new(),
             issue: Vec::<(Option<Usage>, String)>::new(),
         };
 
+        parse_date(&store.date);
+
         let mut starti = 0;
         let mut counter = 0;
-        /* get the issues */
+        /* get to the first line of the issues block*/
         for line in &line_by_line {
             if line.find("症状：").is_some() {
+                store.usage_text.push(String::from(*line));
                 starti = counter+1;
                 break;
             }
@@ -261,14 +319,14 @@ fn main() -> std::io::Result<()> {
 
         let it = &mut line_by_line[starti..].iter();
 
-
+        // sort the issues into corresponding bins
         while let Some(line) = it.next() {
             let mut usage_type: Option<Usage> = None;
             if line.len() < 3{
                 break;
             }
+            store.usage_text.push(String::from(*line));
             /* after close */
-            let t:Vec<char>= line.char_indices().map(|x| x.1).collect();
             if let Some(_) = &line.find("閉店後"){
                 if line.find("水道").is_some() {
                     usage_type = Some(Usage::WaterAfter);
@@ -294,11 +352,14 @@ fn main() -> std::io::Result<()> {
                 }
 
             }
+
+            /* get the usage percentage */
             if usage_type.is_some() {
                 match it.next() {
                     Some(line) => {
                         /* this is the usage info */
                         store.issue.push((usage_type, (line.to_string())));
+                        store.usage_text.push(String::from(*line));
                     },
                     None => {
                         break;
@@ -308,12 +369,48 @@ fn main() -> std::io::Result<()> {
         }
         stores.push(store);
     }
+    
+    // sort the stores by name, then date
+    stores.sort_by(
+        |x, y|{
+            if &x.name == &y.name {
+                if x.parsed_date.is_some() && y.parsed_date.is_none() {
+                    // x > y
+                    Ordering::Greater
+                } 
+                else if x.parsed_date.is_none() && y.parsed_date.is_some() {
+                    Ordering::Less
+                }
+                else if x.parsed_date.is_none() && y.parsed_date.is_none() {
+                    Ordering::Equal
+                }else {
+                    (&x.parsed_date).partial_cmp(&y.parsed_date).unwrap()
+                }
+            }else{
+                (&x.name).partial_cmp(&y.name).unwrap()
+            }
+        });
 
-    let summary = summarize(&stores);
+
+    for store in &stores {
+        let formatted:String;
+
+        // put usage text for a store into columns
+        formatted = make_row(&store.usage_text).replace("\r", "");
+        let res = format!("{},{},{}\n", store.name, store.date,formatted);
+
+        output.write(res.as_bytes())?;
+    }
+
+    let (summary, _db) = summarize(&stores);
+    output.write("\n".as_bytes())?;
+
+    // write out summary
     for line in summary {
         output.write((line+"\n").as_bytes())?;
     }
 
+    
 
     Ok(())
 }
