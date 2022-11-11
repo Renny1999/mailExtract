@@ -276,7 +276,7 @@ fn main() -> std::io::Result<()> {
     let mut stores :Vec<EmailData> = Vec::<EmailData>::new();
 
     /* works through eml files */
-    for f in eml_files {
+    for f in &eml_files {
         let mut eml;
         match EmlParser::from_file(f) {
             Ok(res) => eml = res,
@@ -288,7 +288,15 @@ fn main() -> std::io::Result<()> {
 
         /* get the text body to a workable state */
         let encoded_body: String = clean_string(&(eml.body).unwrap());
-        let decoded_bytes: Vec<u8> = base64::decode(encoded_body).unwrap();
+        let decoded_bytes: Vec<u8>;
+
+        if let Ok(v) = base64::decode(encoded_body) {
+          decoded_bytes = v;
+        }
+        else {
+          println!("Error parsing {}", &f);
+          continue;
+        }
         let decoded_body = from_utf8(&decoded_bytes).unwrap().to_string();
 
         let line_by_line = break_string(&decoded_body);
