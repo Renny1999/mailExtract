@@ -107,8 +107,8 @@ fn summarize(stores: &Vec::<EmailData>)
                     Usage::Electricity =>       cols[1]+=1,
                     Usage::Water =>             cols[2]+=1,
                     Usage::Gas =>               cols[3]+=1,
-                    Usage::WaterAfter =>        cols[4]+=1,
-                    Usage::ElectricityAfter =>  cols[5]+=1,
+                    Usage::ElectricityAfter =>  cols[4]+=1,
+                    Usage::WaterAfter =>        cols[5]+=1,
                     Usage::GasAfter =>          cols[6]+=1,
                 }
 
@@ -302,17 +302,17 @@ fn main() -> std::io::Result<()> {
         let line_by_line = break_string(&decoded_body);
 
         let mut store = EmailData {
-            company: line_by_line[0].to_string().replace("\r", ""),
-            store: line_by_line[1].to_string().replace("\r", ""),
-            id: line_by_line[2].to_string().replace("\r", ""),
-            name: line_by_line[8].to_string().replace("\r", ""),
-            date: line_by_line[9].to_string().replace("\r", ""),
+            company:  line_by_line[0].to_string().replace("\r", ""),
+            store:    line_by_line[1].to_string().replace("\r", ""),
+            id:       line_by_line[2].to_string().replace("\r", ""),
+            name:     line_by_line[8].to_string().replace("\r", ""),
+            date:     line_by_line[9].to_string().replace("\r", ""),
             parsed_date: parse_date(&line_by_line[9].to_string().replace("\r", "")),
             usage_text: Vec::new(),
             issue: Vec::<(Option<Usage>, String)>::new(),
         };
 
-        parse_date(&store.date);
+        // parse_date(&store.date);
 
         let mut starti = 0;
         let mut counter = 0;
@@ -334,7 +334,9 @@ fn main() -> std::io::Result<()> {
             if line.len() < 3{
                 break;
             }
+
             store.usage_text.push(String::from(*line));
+
             /* after close */
             if let Some(_) = &line.find("閉店後"){
                 if line.find("水道").is_some() {
