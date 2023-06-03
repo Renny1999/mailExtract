@@ -35,6 +35,29 @@ fn clean_string(s: &str) -> String {
     data
 }
 
+fn extract_body(s: &str) -> String {
+
+  let mut mystr = String::from("");
+
+  let lines: Vec<&str> = break_string(s);
+
+
+  for l in lines {
+    if l.contains("--==") { continue; }
+    if l.contains("Content-Type: text/plain; charset=\"utf-8\"") { continue; }
+    if l.contains("MIME-Version:") { continue; }
+    if l.contains("Content-Transfer-Encoding: base64") { continue; }
+    if l == "\n" { continue; }
+    if l == "\r" { continue; }
+
+    let newstr = String::from(l).replace("\r", "");
+
+    mystr = mystr + &newstr;
+  }
+
+  mystr
+}
+
 /*
  * the input is a str slice, and I want to reference each line in the str slice
  * and save them into a vector
@@ -286,10 +309,17 @@ fn main() -> std::io::Result<()> {
         /* parse the email */
         let eml = eml.parse().unwrap();
 
+        let extracted_body = extract_body(&(eml.body).as_ref().unwrap());
+
         /* get the text body to a workable state */
-        let encoded_body: String = clean_string(&(eml.body).unwrap());
+        let encoded_body: String = clean_string(&extracted_body);
+
         let decoded_bytes: Vec<u8>;
 
+
+        // println!("encoded_body: {}", &encoded_body);
+
+        base64::decode(&encoded_body).unwrap();
         if let Ok(v) = base64::decode(encoded_body) {
           decoded_bytes = v;
         }

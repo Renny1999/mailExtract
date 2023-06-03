@@ -1,0 +1,192 @@
+Delivered-To: ren@picoada.co.jp
+Received: by 2002:ab0:2449:0:0:0:0:0 with SMTP id g9csp606338uan;
+        Sun, 28 May 2023 02:05:48 -0700 (PDT)
+X-Received: by 2002:a05:622a:10a:b0:3f7:df68:7b00 with SMTP id u10-20020a05622a010a00b003f7df687b00mr7048905qtw.36.1685264748284;
+        Sun, 28 May 2023 02:05:48 -0700 (PDT)
+ARC-Seal: i=3; a=rsa-sha256; t=1685264748; cv=pass;
+        d=google.com; s=arc-20160816;
+        b=hlUbVx6Z3GB/YivrlUBwwK8N+tXmMJ4d89E9x+1ceGZY0B1zdab3cm3QyG9JlIPKqQ
+         U4T1WWsIWovswzL1rAXvhyp5yfISkz5nSAa1B67EVcCISP6e8nJV/1Gb76yPAK8wjnsy
+         J8IxbnX59mVFer/n65m2Y5kGkIukzLzVf092Ll49h7uNHoz++yUX/HKF43QoJUQYbvFi
+         fbF10W9JGT3GzYnAgEPXO4WzZ7SIBr3dVZiciYYjelzvpr1o3C+NymFWQrE15Yo731Jt
+         c1RB1+Gt3euGoOsSrQNM1AKFa67zifTYyX2GBBH3tJN3JMyNhYOG9KRczkTbos1jxM0h
+         cAfQ==
+ARC-Message-Signature: i=3; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-unsubscribe:list-archive:list-help:list-post:list-id
+         :mailing-list:precedence:feedback-id:message-id:date:cc:to:from
+         :subject:reply-to:mime-version:dkim-signature;
+        bh=sI+7unrw6RTSE5dRpy8zQJbMBIs+ZOUhVce/aJHCFus=;
+        b=nNObHkCXh65FEHF2VDhkYbRrAV24fI4AjubjtQbjFl5Y/psZLslbcvoONVt0nTFDjF
+         n28gqK89JECTfXLhLqAtjq+GRaYIRNwIKkOvnvDEIl3Wgyjje+B7gIcHTZdbomKPFhGY
+         9e5GEkRlKQBkZTH0HpZzh2ku0ofLhTmBDGNnn0qTglEQ5TRdbh3BeghIrwkOuquEnLgc
+         7K8PqeAQ0/xgRgkSqGS04Gi5mdKG/1zX2F+oqJ3Rvj4VNJKK8PtCBlLqtl8BFl2dLsEs
+         mII4+Isq13TY/d9v5SuLiopD2TTM3S0OtN++kPdBGrAoHE/sKD7RV5KBNLaeQOJ3pTZF
+         ec8w==
+ARC-Authentication-Results: i=3; mx.google.com;
+       dkim=pass header.i=@picoada.co.jp header.s=google header.b=W8ZhAbpD;
+       arc=pass (i=2 spf=pass spfdomain=mail.ecois.jp dkim=pass dkdomain=ecois.jp dkim=pass dkdomain=amazonses.com dmarc=pass fromdomain=ecois.jp);
+       spf=pass (google.com: domain of detection+bncbaabb25szsrqmgqehumhkzy@picoada.co.jp designates 209.85.220.69 as permitted sender) smtp.mailfrom=detection+bncBAABB25SZSRQMGQEHUMHKZY@picoada.co.jp;
+       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=picoada.co.jp
+Return-Path: <detection+bncBAABB25SZSRQMGQEHUMHKZY@picoada.co.jp>
+Received: from mail-sor-f69.google.com (mail-sor-f69.google.com. [209.85.220.69])
+        by mx.google.com with SMTPS id e17-20020a0ce3d1000000b00625c4d19008sor1894335qvl.3.2023.05.28.02.05.48
+        for <ren@picoada.co.jp>
+        (Google Transport Security);
+        Sun, 28 May 2023 02:05:48 -0700 (PDT)
+Received-SPF: pass (google.com: domain of detection+bncbaabb25szsrqmgqehumhkzy@picoada.co.jp designates 209.85.220.69 as permitted sender) client-ip=209.85.220.69;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@picoada.co.jp header.s=google header.b=W8ZhAbpD;
+       arc=pass (i=2 spf=pass spfdomain=mail.ecois.jp dkim=pass dkdomain=ecois.jp dkim=pass dkdomain=amazonses.com dmarc=pass fromdomain=ecois.jp);
+       spf=pass (google.com: domain of detection+bncbaabb25szsrqmgqehumhkzy@picoada.co.jp designates 209.85.220.69 as permitted sender) smtp.mailfrom=detection+bncBAABB25SZSRQMGQEHUMHKZY@picoada.co.jp;
+       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=picoada.co.jp
+ARC-Seal: i=2; a=rsa-sha256; t=1685264748; cv=pass;
+        d=google.com; s=arc-20160816;
+        b=FDYK75rsF2pSdOnQOyQtYCK4XWoc8NxpoUQvu6tnrmK7keC6OCNXACxMd5IU08CsMz
+         711jNnaIo3Rts0tLC6vdCymtAxU9TqpKoCD8rX4lMtHt4aOXGEZcwyqulRQLEzxEBtpm
+         PQ8wij0gH77BnFtflGgNANkvm15xex0fW7FjHZJQNcjhrF17KXBtUwL31mBuHuQcfkbd
+         Gqf3cFTHQNvYFvi9XBi8POPuRQLg0pFKlbcnlsw5EEqksLyW1vp5EsERxuf/NLcF1pPv
+         6VShKfdPYQKLFnmVVKOwoWtzQpy3P7CpdcqeBDauzPAkUQM2vtQ+krOklhjSpjyM7+rc
+         iT1A==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-unsubscribe:list-archive:list-help:list-post:list-id
+         :mailing-list:precedence:feedback-id:message-id:date:cc:to:from
+         :subject:reply-to:mime-version:dkim-signature;
+        bh=sI+7unrw6RTSE5dRpy8zQJbMBIs+ZOUhVce/aJHCFus=;
+        b=cAychVCsOy0CfVz1lqkvH+EuOicJzVX3XAcmBzqrOgrJUdY2rROZZz0sOgN9aHFzTs
+         a1C7nodPbeE0BJv9BO+2/DM1u6CoQyCYDmYWZ6iTgOBrF13QAz68OMh8YoDMzs/hfTbZ
+         bwl6oD6kPxnQDqgLDwaETPz8uSgoJctYt2k2j2oP6KarV7wCV4LbPaXUzrddErOvYPHe
+         OBGQC8PtRF1xWoXcq4eE2RL2uxE0toGYg45rES1fRfoTJCRTAfy1XMonW6bWiypXvJ+M
+         5s/LZMMj1OBBdj8ranxn9d/k88AGYYsD3z466kXywhLitbJTqTmdmjQlebvtjY8ZXWQx
+         jyrw==
+ARC-Authentication-Results: i=2; mx.google.com;
+       dkim=pass header.i=@ecois.jp header.s=vfyoo3bvia3hlsgopot3frn4jrzfakrw header.b=fDkj2zDl;
+       dkim=pass header.i=@amazonses.com header.s=224i4yxa5dv7c2xz3womw6peuasteono header.b=BS3raDfG;
+       spf=pass (google.com: domain of 01000188619b47c7-f8aceb26-38eb-484e-b402-27857035cb82-000000@mail.ecois.jp designates 54.240.11.109 as permitted sender) smtp.mailfrom=01000188619b47c7-f8aceb26-38eb-484e-b402-27857035cb82-000000@mail.ecois.jp;
+       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=ecois.jp
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=picoada.co.jp; s=google; t=1685264748; x=1687856748;
+        h=list-unsubscribe:list-archive:list-help:list-post:list-id
+         :mailing-list:precedence:x-original-authentication-results
+         :x-original-sender:feedback-id:message-id:date:cc:to:from:subject
+         :reply-to:mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=sI+7unrw6RTSE5dRpy8zQJbMBIs+ZOUhVce/aJHCFus=;
+        b=W8ZhAbpDNN8kKZhXMBH8Fq41FhDvF1D1IFTjxo0AGVDDSDLYYoL3002JfGVfWPw5oq
+         U0nkIc/ixnTfpd320IjjPSqqkriAAOPBYhvp3T3HOy8piohIM0v4sihE+GJPWc7m95ZI
+         3oG3COXlO9Bkwto8cHLCjc+adTKByXfmg1mQ66+Jxut/LtVbFouCSNHXttNS1AS+qgU0
+         RmTQFMx6Odetp5sL9hVqrSzpjUqkfzvX0ZAiM8E5Qvu73lV1GqeGx5CQKKOsmg9MLdaQ
+         qmUTthNyvl8ooV3SAS6HqYi4E8Aq00g2n50g9+6dZji0cuLOgooWgXoR57cQlwy/8TGh
+         pTRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685264748; x=1687856748;
+        h=list-unsubscribe:list-archive:list-help:list-post
+         :x-spam-checked-in-group:list-id:mailing-list:precedence
+         :x-original-authentication-results:x-original-sender:feedback-id
+         :message-id:date:cc:to:from:subject:reply-to:mime-version
+         :x-beenthere:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sI+7unrw6RTSE5dRpy8zQJbMBIs+ZOUhVce/aJHCFus=;
+        b=R+Sz9Fb7P75+Gr2i1i+vawOsZ2ajgmF+VItr8PC1zHjPxhpbjnzpunooMRo39cV/9/
+         EsJiq8yv7jNxmQy3VLqt0iiv3y/EJcxtsKSHX+36rYGrQJ3uLv4t4GaiQ/3s+bB0xsa6
+         frEPkspqtf+PIkhvjrOF5gEYgQJ5KDsNfroFBVtwCvsWg8pul1q6RLF2kmXTxXRW9la+
+         ewePX0vJ7lYLS/KsWV/CKOegkLc1qI7DPSzZSZwmUxZxYcEyGvid00uUOD3O9kNV5gpB
+         sZhnm1hhd4xf68oYx+uduGHyKVIAhDD/+zwwwLxzND2w40A4aUaOtBhNNLF9BTjdl84n
+         6KYA==
+X-Gm-Message-State: AC+VfDwrZxjlNVeccr8+Csb9f5SCQQqwmV6tZNHw+1aZjUcrgVj4YaNO
+	HvpVCZbXg6KWKd06E1s2K/ublhqQ
+X-Google-Smtp-Source: ACHHUZ7vauoEAlBpbBth+adh0C28rK0OH49jUI4iVCChx1DLnpOFGneEWhI02QMb1VVcrZ6pFTxhhw==
+X-Received: by 2002:ad4:551d:0:b0:626:c8d:7924 with SMTP id pz29-20020ad4551d000000b006260c8d7924mr486491qvb.5.1685264747764;
+        Sun, 28 May 2023 02:05:47 -0700 (PDT)
+X-BeenThere: detection@picoada.co.jp
+Received: by 2002:a05:6214:5609:b0:61b:5f28:d4a with SMTP id
+ mg9-20020a056214560900b0061b5f280d4als4687428qvb.0.-pod-prod-08-us; Sun, 28
+ May 2023 02:05:47 -0700 (PDT)
+X-Received: by 2002:a05:6214:dcd:b0:625:aa49:19f2 with SMTP id 13-20020a0562140dcd00b00625aa4919f2mr7524639qvt.63.1685264747016;
+        Sun, 28 May 2023 02:05:47 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1685264747; cv=none;
+        d=google.com; s=arc-20160816;
+        b=rUS4z/6aqaNVkUkrsYKyUpyLT2+SKB9Yg5LQ3nlDBPtY+NwBW24vNPxCYRouwHcO2N
+         zKuxT4zo2oKuMUumds5nX1XWdpGybiVTv6iBCfxmRYHoIco7h76ooOv56AQjxtZvILE3
+         TXtK3wuV21RrWnTKCvBH7KOiQfIG6dVd/ZClfW3aOFDiRg+keYbCVDcdx32ow9MJJwHu
+         P9wIfwbIcewSahB27bkAUHp3o/Ggos6rXeXSkbxxSKylJEPuumtaFuuVEIhGGn0N5bx9
+         Js7cEXJ4xwpPQG2oZ8/CA+C3nX0HyeEp0jpFZfDHJOP2iKINKXTyQPh1Msda+LFAMYGL
+         E03Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=feedback-id:message-id:date:cc:to:from:subject:reply-to
+         :mime-version:dkim-signature:dkim-signature;
+        bh=sI+7unrw6RTSE5dRpy8zQJbMBIs+ZOUhVce/aJHCFus=;
+        b=Jp2pksyoOzyq5l9HRXntlRdlscZoOXY91WLiW4/JMc/sB6uHHEAhuGgYHoVN6Bv1N0
+         f7WoGYdkWP0iiDd0K8800f7kSfpuZ2S3zSUiujTR6iTrrGcCjL/lyBpfKxKXyDQORnw/
+         aYaIX/d06hFwuHVR/RPmEJJytTklcE16d4/SshS9BU9eNYGFuFiTPBh6nGaWQTpOEr6z
+         rHF1SCfT3Qo+smhavelCtiKTOkWKfJh7ocrfEO3sIN0bG/mntCU05oooqcRa4juW89d+
+         gqjaZtANPvcMcKQ/Aj3w5c50NI8Go0azYDTxyTnnG8ZNsvcWqph1Kqa5A8oPEeTu4sIH
+         7ewA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@ecois.jp header.s=vfyoo3bvia3hlsgopot3frn4jrzfakrw header.b=fDkj2zDl;
+       dkim=pass header.i=@amazonses.com header.s=224i4yxa5dv7c2xz3womw6peuasteono header.b=BS3raDfG;
+       spf=pass (google.com: domain of 01000188619b47c7-f8aceb26-38eb-484e-b402-27857035cb82-000000@mail.ecois.jp designates 54.240.11.109 as permitted sender) smtp.mailfrom=01000188619b47c7-f8aceb26-38eb-484e-b402-27857035cb82-000000@mail.ecois.jp;
+       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=ecois.jp
+Received: from a11-109.smtp-out.amazonses.com (a11-109.smtp-out.amazonses.com. [54.240.11.109])
+        by mx.google.com with ESMTPS id n16-20020ac85a10000000b003e4df655665si3430322qta.23.2023.05.28.02.05.46
+        for <detection@picoada.jp>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 28 May 2023 02:05:46 -0700 (PDT)
+Received-SPF: pass (google.com: domain of 01000188619b47c7-f8aceb26-38eb-484e-b402-27857035cb82-000000@mail.ecois.jp designates 54.240.11.109 as permitted sender) client-ip=54.240.11.109;
+Content-Type: multipart/mixed; boundary="===============6396041085284520822=="
+MIME-Version: 1.0
+reply-to: detection@picoada.jp
+Subject: =?utf-8?b?4pag6YeN6KaB44CQRUNPSVPjgJHmsLTlhYnnhrHpgYvnlKjnlbDluLgg44Gu44GK55+l44KJ44Gb?=
+From: =?UTF-8?B?bm8tcmVwbHktZGV0ZWN0aW9uIHZpYSDnlbDluLjmpJznn6U=?= <detection@picoada.co.jp>
+To: ca-kichijoji@wdi.co.jp
+Cc: kakuhari@wdi.co.jp,  d.houki@wdi.co.jp,  hitoshi.k@wdi.co.jp,  m.aoki@wdi.co.jp
+Date: Sun, 28 May 2023 09:05:46 +0000
+Message-ID: <01000188619b47c7-f8aceb26-38eb-484e-b402-27857035cb82-000000@email.amazonses.com>
+Feedback-ID: 1.us-east-1.HHeUxbK1B5/WGAwzyAl0+Y10GgAMJmHHBxLC5iltxRg=:AmazonSES
+X-SES-Outgoing: 2023.05.28-54.240.11.109
+X-Original-Sender: no-reply-detection@ecois.jp
+X-Original-Authentication-Results: mx.google.com;       dkim=pass
+ header.i=@ecois.jp header.s=vfyoo3bvia3hlsgopot3frn4jrzfakrw
+ header.b=fDkj2zDl;       dkim=pass header.i=@amazonses.com
+ header.s=224i4yxa5dv7c2xz3womw6peuasteono header.b=BS3raDfG;       spf=pass
+ (google.com: domain of 01000188619b47c7-f8aceb26-38eb-484e-b402-27857035cb82-000000@mail.ecois.jp
+ designates 54.240.11.109 as permitted sender) smtp.mailfrom=01000188619b47c7-f8aceb26-38eb-484e-b402-27857035cb82-000000@mail.ecois.jp;
+       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=ecois.jp
+X-Original-From: no-reply-detection@ecois.jp
+Precedence: list
+Mailing-list: list detection@picoada.co.jp; contact detection+owners@picoada.co.jp
+List-ID: <detection.picoada.co.jp>
+X-Spam-Checked-In-Group: detection@picoada.co.jp
+X-Google-Group-Id: 387566135877
+List-Post: <https://groups.google.com/a/picoada.co.jp/group/detection/post>, <mailto:detection@picoada.co.jp>
+List-Help: <https://support.google.com/a/picoada.co.jp/bin/topic.py?topic=25838>,
+ <mailto:detection+help@picoada.co.jp>
+List-Archive: <https://groups.google.com/a/picoada.co.jp/group/detection/>
+List-Unsubscribe: <mailto:googlegroups-manage+387566135877+unsubscribe@googlegroups.com>,
+ <https://groups.google.com/a/picoada.co.jp/group/detection/subscribe>
+
+--===============6396041085284520822==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+
+5qCq5byP5Lya56S+IFdESSBKQVBBTgrjgqvjg5fjg6rjg4Hjg6fjg7zjgrYg44Kz44OU44K55ZCJ
+56Wl5a+65bqXCldESUoxNTAyIOOBlOaLheW9k+iAhSDmp5gKCgpFY29pcyBBSSDjgojjgornlbDl
+uLjmpJznn6XoqLrmlq3ntZDmnpzjgpLjgYrnn6XjgonjgZvoh7TjgZfjgb7jgZnjgIIK4oC7QUnj
+grfjgrnjg4bjg6Djgavjgojjgovoh6rli5XpgJrnn6XjgajjgarjgaPjgabjgYrjgorjgb7jgZnj
+gIIKCuaWveioreWQje+8mldESSBDUCDjgrPjg5TjgrnlkInnpaXlr7rlupcK5pel5pmC77yaMjAy
+M+W5tDA15pyIMjfml6UoU2F0KQrnl4fnirbvvJoK5rC06YGTIOS9v+eUqOmHj+OBjOavlOi8g+ea
+hOWkmuOBhArjgIDigLvjg5njg7Pjg4Hjg57jg7zjgq/kvb/nlKjph4/jgojjgorntIQxMzcuOO+8
+heWkmuOBhAoKCuODh+ODvOOCv+ips+e0sOOBr+OAgeS4i+iomFVSTOODquODs+OCr+OCkuOCr+OD
+quODg+OCr+OBl+OBpkVjb2lzIFdlYueUu+mdouOBq+OBpuOBlOeiuuiqjeOBj+OBoOOBleOBhOOA
+ggoK44CAVVJMOiBodHRwczovL2Vjb2lzLmpwL2xvZ2luL2xvZ2lua2V5LTI5NjA3ZTlkMTdlMDBj
+MDdhMmE1M2NhZWEzOTU1YjlmCuOAgOODreOCsOOCpOODs+acieWKueacn+mZkDogMjAyM+W5tDA2
+5pyIMTHml6UoU3VuKQoKCuips+e0sOOCkuOBlOeiuuiqjeOBruS4iuOAgeWOn+WboOOBq+W/g+W9
+k+OBn+OCiuOBjOOBlOOBluOBhOOBvuOBl+OBn+OCieOBlOWvvuW/nOOCkuOBiumhmOOBhOiHtOOB
+l+OBvuOBmeOAggoKCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQoo5qCqKeODlOOCs+ODu+OCqOOCpOODgApFY29p
+cyBBSSDnlbDluLjmpJznn6XoqLrmlq3jgrXjg7zjg5PjgrkK44GU6L+U5L+h5YWIOiBkZXRlY3Rp
+b25AcGljb2FkYS5qcArjgJI1MzAtMDA0MSDlpKfpmKrlupzlpKfpmKrluILljJfljLrlpKnnpZ7m
+qYsxLTE1LTcg44Kv44Oq44K544K/44Or44OT44OrNUYKV2Vic2l0ZTogaHR0cHM6Ly9waWNvYWRh
+LmNvLmpwLwotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0K
+
+--===============6396041085284520822==--
